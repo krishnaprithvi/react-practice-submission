@@ -161,22 +161,12 @@ const Application = () => {
     }
   }
 
-  const leftCount = (left) => {
+  const stateCount = (state) => {
     setTotal(total + 1)
-    setAll(allClicks.concat('Lef'))
+    setAll(allClicks.concat('Lef | Rig'))
     setClicks({
       ...clicks,
-      state: left
-    })
-  }
-
-  const rightCount = (right) => {
-    setTotal(total + 1)
-    setAll(allClicks.concat('Rig'))
-    setClicks({
-      ...clicks,
-      state: right
-      
+      state: state
     })
   }
 
@@ -201,8 +191,8 @@ const Application = () => {
       <ButtonComp clickFunction={incrementCount} buttonText={"Increment Count"} />
       <ButtonComp clickFunction={resetCount} buttonText={"Reset Count"} />
       <ButtonComp clickFunction={decrementCount} buttonText={"Decrement Counter"} />
-      <ButtonComp clickFunction={() => leftCount('left')} buttonText={"Set Left"} />
-      <ButtonComp clickFunction={() => rightCount('right')} buttonText={"Set Right"} />
+      <ButtonComp clickFunction={() => stateCount('left')} buttonText={"Set Left"} />
+      <ButtonComp clickFunction={() => stateCount('right')} buttonText={"Set Right"} />
       <ButtonComp clickFunction={() => setToValue(25)} buttonText={"Set count to 25"} />
       <button onClick={() => console.log('clicked the button')}>Button</button>
       <p id="error" style={{color: "red"}}></p>

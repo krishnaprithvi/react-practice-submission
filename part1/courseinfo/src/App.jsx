@@ -102,37 +102,18 @@ const Application = () => {
     }
   }
 
-  const incrementCount = () => {
-    setAll(allClicks.concat('Inc'))
+  const changeCount = (change) => {
     setTotal(total + 1)
-    if(clicks.state == 'left') {
-      setClicks({...clicks, leftCount: clicks.leftCount + 1})
+    const count = clicks.state === 'left' ? 'leftCount' : 'rightCount';
+    if (change == 'increment') {
+      setAll(allClicks.concat('Inc'))
+      setClicks({...clicks, [count]: clicks[count] + 1})
     } else {
-      setClicks({...clicks, rightCount: clicks.rightCount + 1})
-    }
-  }
-  
-  const decrementCount = () => {
-    // const newClicks = {
-    //   left: clicks.left,
-    //   right: clicks.right,
-    //   count: clicks.count - 1
-    // }
-    //Object Spread syntax
-    setTotal(total + 1)
-    
-    setAll(allClicks.concat('Dec'))
-    if(clicks.state == 'left') {
-      if(clicks.leftCount == 0) {
+      setAll(allClicks.concat('Dec'))
+      if (clicks[count] === 0) {
         appendText("error", "Counter cannot go under zero!")
       } else {
-        setClicks({...clicks, leftCount: clicks.leftCount - 1})
-      }
-    } else {
-      if(clicks.rightCount == 0) {
-        appendText("error", "Counter cannot go under zero!")
-      } else {
-        setClicks({...clicks, rightCount: clicks.rightCount - 1})
+        setClicks({...clicks, [count]: clicks[count] - 1})
       }
     }
   }
@@ -140,30 +121,24 @@ const Application = () => {
   const resetCount = () => {
     setTotal(total + 1)
     setAll(allClicks.concat('Res'))
-    if(clicks.state == 'left') { 
-      if(clicks.leftCount == 0) {
-        appendText("error", "Left Counter is already zero!")
-      } else {
-        setClicks({
-          ...clicks,
-          leftCount: 0
-        })
-      }
+    const count = clicks.state === 'left' ? 'leftCount' : 'rightCount';
+    if (clicks[count] == 0) {
+      appendText("error", `${clicks.state === 'left' ? 'Left': 'Right'} Counter is already zero!`)
     } else {
-      if(clicks.rightCount == 0) {
-        appendText("error", "Right Counter is already zero!")
-      } else {
-        setClicks({
-          ...clicks,
-          rightCount: 0
-        })
-      }
+      setClicks({
+        ...clicks,
+        [count]: 0
+      })
     }
   }
 
   const stateCount = (state) => {
     setTotal(total + 1)
-    setAll(allClicks.concat('Lef | Rig'))
+    if (state == 'left') {
+      setAll(allClicks.concat('Lef'))
+    } else {
+      setAll(allClicks.concat('Rig'))
+    }
     setClicks({
       ...clicks,
       state: state
@@ -188,9 +163,9 @@ const Application = () => {
         <DisplayCount count={clicks.leftCount} name={"Left Count"} />
         <DisplayCount count={clicks.rightCount} name={"Right Count"} />
       </div>
-      <ButtonComp clickFunction={incrementCount} buttonText={"Increment Count"} />
+      <ButtonComp clickFunction={() => changeCount('increment')} buttonText={"Increment Count"} />
       <ButtonComp clickFunction={resetCount} buttonText={"Reset Count"} />
-      <ButtonComp clickFunction={decrementCount} buttonText={"Decrement Counter"} />
+      <ButtonComp clickFunction={() => changeCount('decrement')} buttonText={"Decrement Counter"} />
       <ButtonComp clickFunction={() => stateCount('left')} buttonText={"Set Left"} />
       <ButtonComp clickFunction={() => stateCount('right')} buttonText={"Set Right"} />
       <ButtonComp clickFunction={() => setToValue(25)} buttonText={"Set count to 25"} />

@@ -2,6 +2,12 @@ import { useState } from 'react'
 
 const ButtonComp = ({clickFunction, title}) => <button onClick={clickFunction}>{title}</button>
 
+const Votes = ({votes}) => {
+  return (
+    <p>Votes for above anecdote: {votes}</p>
+  )
+}
+
 function Application() {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -15,17 +21,29 @@ function Application() {
   ]
   const min = 0
   const max = anecdotes.length - 1
-  console.log("c", min, max)
-  const randomNumber = Math.round(Math.random() * (max - min) + min);
-  console.log("c", min, max, randomNumber)
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(max + 1).fill(0));
+  // let vote = Array.apply(null, {length: max + 1}).map(function() {return 0;})
 
   const changeAnec = () => {
+    let randomNumber
+    do {
+     randomNumber = Math.round(Math.random() * (max - min) + min);
+    } while (randomNumber === selected)
     setSelected(randomNumber)
   }
+  let voteSelected = 0
+  const changeVote = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  }
+
   return (
     <>
     <h1>{anecdotes[selected]}</h1>
+    <Votes votes={votes[selected]}/>
+    <ButtonComp clickFunction={() => changeVote()} title="Vote" />
     <ButtonComp clickFunction={() => changeAnec()} title="Next Anecdote" />
     </>
   )

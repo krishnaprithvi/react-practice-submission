@@ -4,7 +4,11 @@ const Header = ({appTitle}) => <h1>{appTitle}</h1>
 
 const ButtonComp = ({clickFunction, buttonText}) => <button onClick={clickFunction}>{buttonText}</button>
 
-const Data = ({data, title}) => <p>{title}: {data}</p>
+const StatisticLine = ({data, title}) => {
+  return (
+      <tr><td style={{fontWeight: '600'}}>{title}</td><td>{data}</td></tr>
+  )
+}
 
 const Statistics = ({title, dataTitle, data}) => {
   const dataElements = []
@@ -12,13 +16,25 @@ const Statistics = ({title, dataTitle, data}) => {
   //   dataElements.push(<Data key={i} title={dataTitle[i]} data={data[i]} />);
   // }
   dataTitle.forEach((title, i) => {
-    dataElements.push(<Data key={i} title={title} data={data[i]} />);
+    dataElements.push(<StatisticLine key={i} title={title} data={data[i]} />);
   })
+
+  if(data[3] == 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
 
   return (
     <>
       <h2>{title}</h2>
-      {dataElements}
+      <table>
+        <tbody>
+          {dataElements}
+        </tbody>
+      </table>
     </>
   )
 }
@@ -29,8 +45,8 @@ function Application() {
   const [bad, setBad] = useState(0)
   const [total, setTotal] = useState(0)
   const title = 'Unicafe Feedback'
-  const average = total/3
-  const positive = (good/total) * 100? (good/total) * 100 + " %": 0
+  const average = parseFloat(total/3).toFixed(2)
+  const positive = (good/total) * 100? parseFloat((good/total) * 100).toFixed(2) + " %": 0
 
   const app = {
     appTitle: "Unicafe Feedback",

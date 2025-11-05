@@ -1,11 +1,27 @@
 import { useState } from 'react'
 
-
 const Header = ({appTitle}) => <h1>{appTitle}</h1>
 
 const ButtonComp = ({clickFunction, buttonText}) => <button onClick={clickFunction}>{buttonText}</button>
 
 const Data = ({data, title}) => <p>{title}: {data}</p>
+
+const Statistics = ({title, dataTitle, data}) => {
+  const dataElements = []
+  // for (let i=0;i<dataTitle.length;i++) {
+  //   dataElements.push(<Data key={i} title={dataTitle[i]} data={data[i]} />);
+  // }
+  dataTitle.forEach((title, i) => {
+    dataElements.push(<Data key={i} title={title} data={data[i]} />);
+  })
+
+  return (
+    <>
+      <h2>{title}</h2>
+      {dataElements}
+    </>
+  )
+}
 
 function Application() {
   const [good, setGood] = useState(0)
@@ -14,7 +30,14 @@ function Application() {
   const [total, setTotal] = useState(0)
   const title = 'Unicafe Feedback'
   const average = total/3
-  const positive = (good/total) * 100
+  const positive = (good/total) * 100? (good/total) * 100 + " %": 0
+
+  const app = {
+    appTitle: "Unicafe Feedback",
+    stats: "Statistics",
+    title: ["Good", "Neutral", "Bad", "Total Feedback", 'Average', 'Positive %' ],
+    data: [good, neutral, bad, total, average, positive]
+  }
 
   const setState = (state) => {
     if (state == 'good') {
@@ -31,17 +54,11 @@ function Application() {
 
   return (
     <>
-    <Header appTitle={title} />
+    <Header appTitle={app.appTitle} />
     <ButtonComp clickFunction={() => setState('good')} buttonText="Good" />
     <ButtonComp clickFunction={() => setState('neutral')} buttonText="Neutral" />
     <ButtonComp clickFunction={() => setState('bad')} buttonText="Bad" />
-    <Header appTitle='Statistics' />
-    <Data title='Good' data={good} />
-    <Data title='Neutral' data={neutral} />
-    <Data title='Bad' data={bad} />
-    <Data title='Total Feedback' data={total} />
-    <Data title='Average' data={average} />
-    <Data title='Positive %' data={positive} />
+    <Statistics title={app.stats} dataTitle={app.title} data={app.data}/>
     </>
   )
 }

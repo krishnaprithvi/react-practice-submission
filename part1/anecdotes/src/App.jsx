@@ -1,12 +1,23 @@
 import { useState } from 'react'
 
-const ButtonComp = ({clickFunction, title}) => <button onClick={clickFunction}>{title}</button>
+const Anecdote = ({title, anec, votes, voteChange}) => {
+  if (voteChange == 0) {
+    return (
+      <p>Please vote for your favorite anecdote</p>
+    )
+  }
 
-const Votes = ({votes}) => {
   return (
-    <p>Votes for above anecdote: {votes}</p>
+    <>
+      <h1>{title}</h1>
+      <h3>{anec}</h3>
+      <p>Votes for current anecdote: {votes}</p>
+    </>
   )
+  
 }
+
+const ButtonComp = ({clickFunction, title}) => <button onClick={clickFunction}>{title}</button>
 
 function Application() {
   const anecdotes = [
@@ -23,6 +34,7 @@ function Application() {
   const max = anecdotes.length - 1
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(max + 1).fill(0));
+  const [totalVotes, setTotal] = useState(0)
   // let vote = Array.apply(null, {length: max + 1}).map(function() {return 0;})
 
   const changeAnec = () => {
@@ -32,19 +44,23 @@ function Application() {
     } while (randomNumber === selected)
     setSelected(randomNumber)
   }
-  let voteSelected = 0
+
   const changeVote = () => {
     const newVotes = [...votes];
     newVotes[selected] += 1;
     setVotes(newVotes);
+    setTotal(totalVotes + 1)
   }
+
+  const maxVotes = Math.max(...votes);
+  const maxIndex = votes.indexOf(maxVotes);
 
   return (
     <>
-    <h1>{anecdotes[selected]}</h1>
-    <Votes votes={votes[selected]}/>
-    <ButtonComp clickFunction={() => changeVote()} title="Vote" />
-    <ButtonComp clickFunction={() => changeAnec()} title="Next Anecdote" />
+      <Anecdote title="Anecdote of the day" anec={anecdotes[selected]} votes={votes[selected]} />
+      <ButtonComp clickFunction={() => changeVote()} title="Vote" />
+      <ButtonComp clickFunction={() => changeAnec()} title="Next Anecdote" />
+      <Anecdote title="Anecdote with most votes" anec={anecdotes[maxIndex]} votes={votes[maxIndex]} voteChange={totalVotes} />
     </>
   )
 }
